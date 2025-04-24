@@ -21,8 +21,9 @@ export const RealtimeChat = ({
   onMessage,
   messages: initialMessages = [],
 }: RealtimeChatProps) => {
-  const { containerRef, scrollToBottom } = useChatScroll();
+  const { messagesEndRef, scrollToBottom } = useChatScroll();
   const [userId, setUserId] = useState<string | null>(null);
+  const [prevMessagesLength, setPrevMessagesLength] = useState(0);
 
   // Get the current user's ID
   useEffect(() => {
@@ -70,10 +71,13 @@ export const RealtimeChat = ({
     }
   }, [allMessages, onMessage]);
 
+  // Only scroll when new messages are added
   useEffect(() => {
-    // Scroll to bottom whenever messages change
-    scrollToBottom();
-  }, [allMessages, scrollToBottom]);
+    if (allMessages.length > prevMessagesLength) {
+      scrollToBottom();
+    }
+    setPrevMessagesLength(allMessages.length);
+  }, [allMessages.length, prevMessagesLength, scrollToBottom]);
 
   const handleSendMessage = useCallback(
     (e: React.FormEvent) => {
@@ -82,14 +86,16 @@ export const RealtimeChat = ({
 
       sendMessage(newMessage);
       setNewMessage("");
+      // Scroll after sending a message
+      scrollToBottom();
     },
-    [newMessage, isConnected, sendMessage]
+    [newMessage, isConnected, sendMessage, scrollToBottom]
   );
 
   return (
     <div className="flex flex-col h-full w-full bg-background text-foreground antialiased">
       {/* Messages */}
-      <div ref={containerRef} className="flex-1 overflow-y-auto p-4 space-y-4 pb-20">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 pb-20">
         {allMessages.length === 0 ? (
           <div className="text-center text-sm text-muted-foreground">
             No messages yet. Start the conversation!
@@ -115,6 +121,7 @@ export const RealtimeChat = ({
             );
           })}
         </div>
+        <div ref={messagesEndRef} />
       </div>
 
       <form
