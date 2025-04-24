@@ -53,7 +53,13 @@ export function SignUpForm({
   };
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <div
+      className={cn(
+        "container mx-auto max-w-xl mt-16 flex flex-col gap-6",
+        className
+      )}
+      {...props}
+    >
       {success ? (
         <Card>
           <CardHeader>
