@@ -1,4 +1,5 @@
 import { AvatarUpload } from "@/components/avatar-upload";
+import { MainHeader } from "@/components/main-header";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,11 +10,9 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { MainHeader } from "@/components/main-header";
 import useAuthenticated from "@/hooks/use-authenticated";
 import { supabase } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 export default function SettingsPage() {
   const { user, profile } = useAuthenticated();
@@ -22,7 +21,6 @@ export default function SettingsPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  const navigate = useNavigate();
 
   // Initialize form values when profile is loaded
   useEffect(() => {
