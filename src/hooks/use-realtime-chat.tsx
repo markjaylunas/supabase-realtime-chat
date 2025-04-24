@@ -1,73 +1,139 @@
 import { supabase } from "@/lib/supabase/client";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+
+export interface ChatMessage {
+  id: string;
+  content: string;
+  createdAt: string;
+  user: {
+    id: string;
+    name: string;
+    avatar_url?: string | null;
+  };
+}
 
 interface UseRealtimeChatProps {
   roomName: string;
   username: string;
 }
 
-export interface ChatMessage {
-  id: string;
-  content: string;
-  user: {
-    name: string;
-  };
-  createdAt: string;
-}
-
-const EVENT_MESSAGE_TYPE = "message";
-
 export function useRealtimeChat({ roomName, username }: UseRealtimeChatProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [channel, setChannel] = useState<ReturnType<
-    typeof supabase.channel
-  > | null>(null);
   const [isConnected, setIsConnected] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  // Get the current user's ID
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      const { data, error } = await supabase.auth.getUser();
+      if (error) {
+        console.error("Error getting current user:", error);
+        return;
+      }
+      setUserId(data.user.id);
+    };
+    
+    getCurrentUser();
+  }, []);
 
   useEffect(() => {
-    const newChannel = supabase.channel(roomName);
+    if (!userId) return;
 
-    newChannel
-      .on("broadcast", { event: EVENT_MESSAGE_TYPE }, (payload) => {
-        setMessages((current) => [...current, payload.payload as ChatMessage]);
-      })
-      .subscribe(async (status) => {
-        if (status === "SUBSCRIBED") {
-          setIsConnected(true);
+    const channel = supabase
+      .channel(`room:${roomName}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "messages",
+          filter: `room=eq.${roomName}`,
+        },
+        async (payload) => {
+          // Fetch the complete message with user info from the view
+          const { data, error } = await supabase
+            .from("user_messages")
+            .select("*")
+            .eq("id", payload.new.id)
+            .single();
+            
+          if (error) {
+            console.error("Error fetching new message details:", error);
+            return;
+          }
+          
+          const newMessage = {
+            id: data.id,
+            content: data.content,
+            createdAt: data.created_at,
+            user: {
+              id: data.user_id,
+              name: data.user_name,
+              avatar_url: data.user_avatar_url,
+            },
+          };
+          
+          setMessages((prev) => [...prev, newMessage]);
         }
+      )
+      .subscribe((status) => {
+        setIsConnected(status === "SUBSCRIBED");
       });
 
-    setChannel(newChannel);
+    // Fetch initial messages from the view
+    const fetchMessages = async () => {
+      const { data, error } = await supabase
+        .from("user_messages")
+        .select("*")
+        .eq("room", roomName)
+        .order("created_at", { ascending: true });
+
+      if (error) {
+        console.error("Error fetching messages:", error);
+        return;
+      }
+
+      const formattedMessages = data.map((msg) => ({
+        id: msg.id,
+        content: msg.content,
+        createdAt: msg.created_at,
+        user: {
+          id: msg.user_id,
+          name: msg.user_name,
+          avatar_url: msg.user_avatar_url,
+        },
+      }));
+
+      setMessages(formattedMessages);
+    };
+
+    fetchMessages();
 
     return () => {
-      supabase.removeChannel(newChannel);
+      channel.unsubscribe();
     };
-  }, [roomName, username, supabase]);
+  }, [roomName, userId]);
 
-  const sendMessage = useCallback(
-    async (content: string) => {
-      if (!channel || !isConnected) return;
+  const sendMessage = async (content: string) => {
+    if (!userId) {
+      console.error("Cannot send message: User ID not available");
+      return;
+    }
+    
+    const { error } = await supabase.from("messages").insert({
+      content,
+      room: roomName,
+      user_id: userId,
+    });
 
-      const message: ChatMessage = {
-        id: crypto.randomUUID(),
-        content,
-        user: {
-          name: username,
-        },
-        createdAt: new Date().toISOString(),
-      };
+    if (error) {
+      console.error("Error sending message:", error);
+    }
+  };
 
-      // Update local state immediately for the sender
-      setMessages((current) => [...current, message]);
-
-      await channel.send({
-        type: "broadcast",
-        event: EVENT_MESSAGE_TYPE,
-        payload: message,
-      });
-    },
-    [channel, isConnected, username]
-  );
-
-  return { messages, sendMessage, isConnected };
+  return {
+    messages,
+    sendMessage,
+    isConnected,
+  };
 }

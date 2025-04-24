@@ -6,6 +6,7 @@ import { type ChatMessage, useRealtimeChat } from "@/hooks/use-realtime-chat";
 import { cn } from "@/lib/utils";
 import { Send } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { supabase } from "@/lib/supabase/client";
 
 interface RealtimeChatProps {
   roomName: string;
@@ -13,6 +14,7 @@ interface RealtimeChatProps {
   onMessage?: (messages: ChatMessage[]) => void;
   messages?: ChatMessage[];
 }
+
 export const RealtimeChat = ({
   roomName,
   username,
@@ -20,6 +22,21 @@ export const RealtimeChat = ({
   messages: initialMessages = [],
 }: RealtimeChatProps) => {
   const { containerRef, scrollToBottom } = useChatScroll();
+  const [userId, setUserId] = useState<string | null>(null);
+
+  // Get the current user's ID
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      const { data, error } = await supabase.auth.getUser();
+      if (error) {
+        console.error("Error getting current user:", error);
+        return;
+      }
+      setUserId(data.user.id);
+    };
+    
+    getCurrentUser();
+  }, []);
 
   const {
     messages: realtimeMessages,
@@ -82,7 +99,7 @@ export const RealtimeChat = ({
           {allMessages.map((message, index) => {
             const prevMessage = index > 0 ? allMessages[index - 1] : null;
             const showHeader =
-              !prevMessage || prevMessage.user.name !== message.user.name;
+              !prevMessage || prevMessage.user.id !== message.user.id;
 
             return (
               <div
@@ -91,7 +108,7 @@ export const RealtimeChat = ({
               >
                 <ChatMessageItem
                   message={message}
-                  isOwnMessage={message.user.name === username}
+                  isOwnMessage={message.user.id === userId}
                   showHeader={showHeader}
                 />
               </div>
