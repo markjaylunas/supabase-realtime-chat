@@ -3,21 +3,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useChatScroll } from "@/hooks/use-chat-scroll";
 import { type ChatMessage, useRealtimeChat } from "@/hooks/use-realtime-chat";
+import { supabase } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import { Send } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { supabase } from "@/lib/supabase/client";
 
 interface RealtimeChatProps {
   roomName: string;
-  username: string;
   onMessage?: (messages: ChatMessage[]) => void;
   messages?: ChatMessage[];
 }
 
 export const RealtimeChat = ({
   roomName,
-  username,
   onMessage,
   messages: initialMessages = [],
 }: RealtimeChatProps) => {
@@ -35,7 +33,7 @@ export const RealtimeChat = ({
       }
       setUserId(data.user.id);
     };
-    
+
     getCurrentUser();
   }, []);
 
@@ -45,7 +43,6 @@ export const RealtimeChat = ({
     isConnected,
   } = useRealtimeChat({
     roomName,
-    username,
   });
   const [newMessage, setNewMessage] = useState("");
 

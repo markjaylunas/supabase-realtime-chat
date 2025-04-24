@@ -32,10 +32,7 @@ export default function ChatPage() {
         </div>
       </header>
       <main className="flex-1 flex flex-col max-w-3xl w-full mx-auto pt-16">
-        <RealtimeChat
-          roomName="global-chat"
-          username={profile.full_name || user.email || profile.id}
-        />
+        <RealtimeChat roomName="global-chat" />
       </main>
     </div>
   );

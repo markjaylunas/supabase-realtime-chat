@@ -14,10 +14,9 @@ export interface ChatMessage {
 
 interface UseRealtimeChatProps {
   roomName: string;
-  username: string;
 }
 
-export function useRealtimeChat({ roomName, username }: UseRealtimeChatProps) {
+export function useRealtimeChat({ roomName }: UseRealtimeChatProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isConnected, setIsConnected] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
@@ -32,7 +31,7 @@ export function useRealtimeChat({ roomName, username }: UseRealtimeChatProps) {
       }
       setUserId(data.user.id);
     };
-    
+
     getCurrentUser();
   }, []);
 
@@ -56,12 +55,12 @@ export function useRealtimeChat({ roomName, username }: UseRealtimeChatProps) {
             .select("*")
             .eq("id", payload.new.id)
             .single();
-            
+
           if (error) {
             console.error("Error fetching new message details:", error);
             return;
           }
-          
+
           const newMessage = {
             id: data.id,
             content: data.content,
@@ -72,7 +71,7 @@ export function useRealtimeChat({ roomName, username }: UseRealtimeChatProps) {
               avatar_url: data.user_avatar_url,
             },
           };
-          
+
           setMessages((prev) => [...prev, newMessage]);
         }
       )
@@ -119,7 +118,7 @@ export function useRealtimeChat({ roomName, username }: UseRealtimeChatProps) {
       console.error("Cannot send message: User ID not available");
       return;
     }
-    
+
     const { error } = await supabase.from("messages").insert({
       content,
       room: roomName,
