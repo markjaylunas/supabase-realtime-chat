@@ -8,9 +8,9 @@ export default function ChatPage() {
 
   if (!user || !profile) return null;
   return (
-    <div className="container mx-auto max-w-3xl flex flex-col min-h-svh">
-      <header className="border-b">
-        <div className="flex h-16 items-center px-4">
+    <div className="flex flex-col h-svh">
+      <header className="border-b fixed top-0 left-0 right-0 bg-background z-10">
+        <div className="flex h-16 items-center px-4 max-w-3xl mx-auto">
           <h1 className="text-lg font-bold">
             Realtime Chat <span className="text-muted-foreground">by</span>{" "}
             <Link
@@ -28,7 +28,7 @@ export default function ChatPage() {
           </div>
         </div>
       </header>
-      <main className="flex-1 flex flex-col items-center justify-center p-4">
+      <main className="flex-1 flex flex-col max-w-3xl w-full mx-auto pt-16">
         <RealtimeChat
           roomName="global-chat"
           username={profile.full_name || user.email || profile.id}
