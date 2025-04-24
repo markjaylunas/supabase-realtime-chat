@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { MainHeader } from "@/components/main-header";
 import useAuthenticated from "@/hooks/use-authenticated";
 import { supabase } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
@@ -53,7 +54,7 @@ export default function SettingsPage() {
 
       if (error) throw error;
       setSuccess(true);
-    } catch (error) {
+    } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");
     } finally {
       setIsLoading(false);
@@ -65,52 +66,50 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="container mx-auto flex items-center justify-center py-8">
-      <Card className="w-md">
-        <CardHeader>
-          <CardTitle>Profile Settings</CardTitle>
-          <CardDescription>
-            Update your profile information and preferences
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="flex justify-center">
-              <AvatarUpload
-                profile={profile}
-                onUploadComplete={handleAvatarUpload}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="fullName">Full Name</Label>
-              <Input
-                id="fullName"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                placeholder="Enter your full name"
-              />
-            </div>
-            {error && <p className="text-sm text-red-500">{error}</p>}
-            {success && (
-              <p className="text-sm text-green-500">
-                Profile updated successfully!
-              </p>
-            )}
-            <div className="flex justify-end gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => navigate("/chat")}
-              >
-                Back
-              </Button>
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? "Saving..." : "Save Changes"}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+    <div className="flex flex-col h-svh">
+      <MainHeader />
+      <main className="flex-1 flex flex-col max-w-3xl w-full mx-auto pt-16">
+        <div className="container mx-auto max-w-xl flex flex-col gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl">Settings</CardTitle>
+              <CardDescription>
+                Manage your account settings and profile
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit}>
+                <div className="flex flex-col gap-6">
+                  <div className="grid gap-2">
+                    <Label htmlFor="full-name">Full Name</Label>
+                    <Input
+                      id="full-name"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label>Avatar</Label>
+                    <AvatarUpload
+                      profile={profile}
+                      onUploadComplete={handleAvatarUpload}
+                    />
+                  </div>
+                  {error && <p className="text-sm text-red-500">{error}</p>}
+                  {success && (
+                    <p className="text-sm text-green-500">
+                      Settings updated successfully!
+                    </p>
+                  )}
+                  <Button type="submit" className="w-full" disabled={isLoading}>
+                    {isLoading ? "Saving..." : "Save Changes"}
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
+      </main>
     </div>
   );
 }

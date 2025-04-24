@@ -1,7 +1,7 @@
 import { RealtimeChat } from "@/components/realtime-chat";
 import { UserAvatar } from "@/components/user-avatar";
+import { Brand } from "@/components/brand";
 import useAuthenticated from "@/hooks/use-authenticated";
-import { Link } from "react-router-dom";
 
 export default function ChatPage() {
   const { user, profile } = useAuthenticated();
@@ -11,20 +11,7 @@ export default function ChatPage() {
     <div className="flex flex-col h-svh">
       <header className="border-b fixed top-0 left-0 right-0 bg-background z-10">
         <div className="flex h-16 items-center px-4 max-w-3xl mx-auto">
-          <h1 className="text-lg font-bold">
-            Realtime Chat{" "}
-            <span className="text-sm font-normal text-muted-foreground">
-              by
-            </span>{" "}
-            <Link
-              to="https://makje.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:underline text-sm font-normal text-muted-foreground"
-            >
-              Mark Jay Lunas | Makje
-            </Link>
-          </h1>
+          <Brand />
 
           <div className="ml-auto flex items-center space-x-4">
             <UserAvatar profile={profile} />
