@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function UpdatePasswordForm({
   className,
@@ -19,6 +20,7 @@ export function UpdatePasswordForm({
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,7 +31,7 @@ export function UpdatePasswordForm({
       const { error } = await supabase.auth.updateUser({ password });
       if (error) throw error;
       // Update this route to redirect to an authenticated route. The user already has an active session.
-      location.href = "/protected";
+      navigate("/chat");
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");
     } finally {
@@ -38,7 +40,13 @@ export function UpdatePasswordForm({
   };
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <div
+      className={cn(
+        "container mx-auto max-w-xl mt-16 flex flex-col gap-6",
+        className
+      )}
+      {...props}
+    >
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Reset Your Password</CardTitle>

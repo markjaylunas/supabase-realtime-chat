@@ -11,8 +11,9 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
-export function SignUpForm({
+export function RegisterForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
@@ -23,7 +24,7 @@ export function SignUpForm({
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const handleSignUp = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
@@ -64,13 +65,13 @@ export function SignUpForm({
         <Card>
           <CardHeader>
             <CardTitle className="text-2xl">
-              Thank you for signing up!
+              Thank you for registering!
             </CardTitle>
             <CardDescription>Check your email to confirm</CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              You've successfully signed up. Please check your email to confirm
+              You've successfully registered. Please check your email to confirm
               your account before signing in.
             </p>
           </CardContent>
@@ -78,11 +79,11 @@ export function SignUpForm({
       ) : (
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl">Sign up</CardTitle>
+            <CardTitle className="text-2xl">Register</CardTitle>
             <CardDescription>Create a new account</CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSignUp}>
+            <form onSubmit={handleRegister}>
               <div className="flex flex-col gap-6">
                 <div className="grid gap-2">
                   <Label htmlFor="email">Email</Label>
@@ -121,14 +122,14 @@ export function SignUpForm({
                 </div>
                 {error && <p className="text-sm text-red-500">{error}</p>}
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? "Creating an account..." : "Sign up"}
+                  {isLoading ? "Creating an account..." : "Register"}
                 </Button>
               </div>
               <div className="mt-4 text-center text-sm">
                 Already have an account?{" "}
-                <a href="/login" className="underline underline-offset-4">
+                <Link to="/login" className="underline underline-offset-4">
                   Login
-                </a>
+                </Link>
               </div>
             </form>
           </CardContent>
@@ -136,4 +137,4 @@ export function SignUpForm({
       )}
     </div>
   );
-}
+} 

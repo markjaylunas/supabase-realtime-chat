@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import { ForgotPasswordForm } from "./components/forgot-password-form";
 import { LoginForm } from "./components/login-form";
-import { SignUpForm } from "./components/sign-up-form";
+import { RegisterForm } from "./components/register-form";
 import { UpdatePasswordForm } from "./components/update-password-form";
 import ChatPage from "./pages/chat";
 import SettingsPage from "./pages/settings";
@@ -18,7 +18,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/login" element={<LoginForm />} />
-          <Route path="/sign-up" element={<SignUpForm />} />
+          <Route path="/register" element={<RegisterForm />} />
           <Route path="/forgot-password" element={<ForgotPasswordForm />} />
           <Route path="/update-password" element={<UpdatePasswordForm />} />
           <Route path="/chat" element={<ChatPage />} />

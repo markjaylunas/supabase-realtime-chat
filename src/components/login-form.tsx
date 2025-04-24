@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export function LoginForm({
   className,
@@ -34,7 +34,6 @@ export function LoginForm({
         password,
       });
       if (error) throw error;
-      // Update this route to redirect to an authenticated route. The user already has an active session.
       navigate("/chat");
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");
@@ -97,9 +96,9 @@ export function LoginForm({
             </div>
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{" "}
-              <a href="/sign-up" className="underline underline-offset-4">
-                Sign up
-              </a>
+              <Link to="/register" className="underline underline-offset-4">
+                Register
+              </Link>
             </div>
           </form>
         </CardContent>
