@@ -11,7 +11,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import useAuthenticated from "@/hooks/use-authenticated";
 import { supabase } from "@/lib/supabase/client";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function SettingsPage() {
   const { user, profile } = useAuthenticated();
@@ -20,6 +21,7 @@ export default function SettingsPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const navigate = useNavigate();
 
   // Initialize form values when profile is loaded
   useEffect(() => {
@@ -63,8 +65,8 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="container max-w-2xl py-8">
-      <Card>
+    <div className="container mx-auto flex items-center justify-center py-8">
+      <Card className="w-md">
         <CardHeader>
           <CardTitle>Profile Settings</CardTitle>
           <CardDescription>
@@ -94,7 +96,14 @@ export default function SettingsPage() {
                 Profile updated successfully!
               </p>
             )}
-            <div className="flex justify-end">
+            <div className="flex justify-end gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => navigate("/chat")}
+              >
+                Back
+              </Button>
               <Button type="submit" disabled={isLoading}>
                 {isLoading ? "Saving..." : "Save Changes"}
               </Button>
