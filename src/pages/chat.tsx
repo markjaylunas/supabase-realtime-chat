@@ -1,9 +1,11 @@
-import useAuthenticated from "@/hooks/use-authenticated";
+import { RealtimeChat } from "@/components/realtime-chat";
 import { UserAvatar } from "@/components/user-avatar";
+import useAuthenticated from "@/hooks/use-authenticated";
 
 export default function ChatPage() {
   const { user, profile } = useAuthenticated();
-  if (!user) return null;
+
+  if (!user || !profile) return null;
   return (
     <div className="flex flex-col min-h-svh">
       <header className="border-b">
@@ -14,10 +16,10 @@ export default function ChatPage() {
         </div>
       </header>
       <main className="flex-1 flex flex-col items-center justify-center p-4">
-        <h1 className="text-2xl font-bold mb-4">Chat Page</h1>
-        <p className="text-muted-foreground mb-4">
-          Chat functionality coming soon...
-        </p>
+        <RealtimeChat
+          roomName="global-chat"
+          username={profile.full_name || user.email || profile.id}
+        />
       </main>
     </div>
   );
