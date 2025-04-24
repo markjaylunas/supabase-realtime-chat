@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/client";
+import { supabase } from "@/lib/supabase/client";
 import { Profile } from "@/lib/types";
 import { User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
@@ -11,13 +11,12 @@ export default function useAuthenticated() {
   const navigate = useNavigate();
   useEffect(() => {
     const checkAuth = async () => {
-      const client = createClient();
-      const { data, error } = await client.auth.getUser();
+      const { data, error } = await supabase.auth.getUser();
 
       if (error) {
         navigate("/login");
       } else {
-        const { data: profile, error: profileError } = await client
+        const { data: profile, error: profileError } = await supabase
           .from("profiles")
           .select("*")
           .eq("id", data.user.id)

@@ -10,6 +10,7 @@ import { LoginForm } from "./components/login-form";
 import { SignUpForm } from "./components/sign-up-form";
 import { UpdatePasswordForm } from "./components/update-password-form";
 import ChatPage from "./pages/chat";
+import SettingsPage from "./pages/settings";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPasswordForm />} />
           <Route path="/update-password" element={<UpdatePasswordForm />} />
           <Route path="/chat" element={<ChatPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
           <Route path="/" element={<Navigate to="/login" replace />} />
         </Routes>
       </Router>
