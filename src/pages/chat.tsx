@@ -12,12 +12,15 @@ export default function ChatPage() {
       <header className="border-b fixed top-0 left-0 right-0 bg-background z-10">
         <div className="flex h-16 items-center px-4 max-w-3xl mx-auto">
           <h1 className="text-lg font-bold">
-            Realtime Chat <span className="text-muted-foreground">by</span>{" "}
+            Realtime Chat{" "}
+            <span className="text-sm font-normal text-muted-foreground">
+              by
+            </span>{" "}
             <Link
               to="https://makje.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:underline font-normal text-muted-foreground"
+              className="hover:underline text-sm font-normal text-muted-foreground"
             >
               Mark Jay Lunas | Makje
             </Link>
