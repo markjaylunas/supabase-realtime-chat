@@ -1,10 +1,16 @@
 # Supabase Realtime Chat
 
-A modern real-time chat application built with React, TypeScript, and Supabase. This application demonstrates real-time messaging capabilities using Supabase's real-time subscriptions.
+A modern real-time chat application built with React, TypeScript, and Supabase. This application demonstrates real-time messaging capabilities using Supabase's realtime.
 
 ## Features
 
-- Real-time messaging using Supabase
+### Core Features
+1. Real-Time Chat: Implement real-time messaging using Supabase's Realtime functionality.
+2. User Authentication: Set up user registration, login, and logout features.
+3. Profile Management: Allow users to update their profiles, including uploading a profile picture using Supabase Storage.
+4. RLS Policies: Implement Row Level Security (RLS) policies to ensure data privacy and access control.
+
+### Technical Features
 - Modern UI with Tailwind CSS and Radix UI components
 - Type-safe development with TypeScript
 - Fast development with Vite
