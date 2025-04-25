@@ -19,6 +19,7 @@ export function AvatarUpload({ profile, onUploadComplete }: AvatarUploadProps) {
     return name
       .split(" ")
       .map((n) => n[0])
+      .slice(0, 2)
       .join("")
       .toUpperCase();
   };
@@ -76,7 +77,9 @@ export function AvatarUpload({ profile, onUploadComplete }: AvatarUploadProps) {
         <AvatarImage src={avatarUrl} alt={profile?.full_name || ""} />
         <AvatarFallback>
           {profile?.full_name ? (
-            getInitials(profile.full_name)
+            <p className="text-4xl font-bold">
+              {getInitials(profile.full_name)}
+            </p>
           ) : (
             <User className="h-8 w-8" />
           )}
