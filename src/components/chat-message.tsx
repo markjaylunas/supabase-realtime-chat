@@ -44,7 +44,9 @@ export const ChatMessageItem = ({
               />
               <AvatarFallback>
                 {message.user.name ? (
-                  getInitials(message.user.name)
+                  <p className="text-xl font-bold">
+                    {getInitials(message.user.name)}
+                  </p>
                 ) : (
                   <User className="h-6 w-6" />
                 )}
@@ -72,4 +74,3 @@ export const ChatMessageItem = ({
     </div>
   );
 };
-
