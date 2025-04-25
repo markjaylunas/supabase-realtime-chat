@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { ChatMessage } from "@/hooks/use-realtime-chat";
 import { cn, formatMessageTime } from "@/lib/utils";
 import { User } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface ChatMessageItemProps {
   message: ChatMessage;
@@ -33,15 +34,15 @@ export const ChatMessageItem = ({
       // Check if this part is a URL
       if (part.match(urlPattern)) {
         return (
-          <a
+          <Link
             key={index}
-            href={part}
+            to={part}
             target="_blank"
             rel="noopener noreferrer"
             className="underline hover:text-primary/80"
           >
             {part}
-          </a>
+          </Link>
         );
       }
       // Return regular text
