@@ -22,6 +22,33 @@ export const ChatMessageItem = ({
       .toUpperCase();
   };
 
+  const renderMessageContent = (content: string) => {
+    // URL regex pattern
+    const urlPattern = /(https?:\/\/[^\s]+)/g;
+    
+    // Split the content by URLs
+    const parts = content.split(urlPattern);
+    
+    return parts.map((part, index) => {
+      // Check if this part is a URL
+      if (part.match(urlPattern)) {
+        return (
+          <a
+            key={index}
+            href={part}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-primary/80"
+          >
+            {part}
+          </a>
+        );
+      }
+      // Return regular text
+      return part;
+    });
+  };
+
   return (
     <div
       className={`flex mt-2 ${isOwnMessage ? "justify-end" : "justify-start"}`}
@@ -68,7 +95,7 @@ export const ChatMessageItem = ({
               : "bg-muted text-foreground"
           )}
         >
-          {message.content}
+          {renderMessageContent(message.content)}
         </div>
       </div>
     </div>
