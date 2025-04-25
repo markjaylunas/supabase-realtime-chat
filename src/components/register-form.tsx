@@ -1,3 +1,4 @@
+import { MainHeader } from "@/components/main-header";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,7 +9,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { MainHeader } from "@/components/main-header";
 import { supabase } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -40,6 +40,7 @@ export function RegisterForm({
         email,
         password,
         options: {
+          emailRedirectTo: import.meta.env.VITE_PUBLIC_URL,
           data: {
             full_name: email.split("@")[0],
           },
@@ -74,8 +75,8 @@ export function RegisterForm({
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                You've successfully registered. Please check your email to confirm
-                your account before signing in.
+                You've successfully registered. Please check your email to
+                confirm your account before signing in.
               </p>
             </CardContent>
           </Card>
@@ -137,4 +138,4 @@ export function RegisterForm({
       </div>
     </div>
   );
-} 
+}
